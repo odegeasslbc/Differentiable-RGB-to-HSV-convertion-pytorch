@@ -36,7 +36,29 @@ class HSVLoss(nn.Module):
         value = img.max(1)[0]
         return hue, saturation, value
 
+    def get_rgb_from_hsv(self):
+        C = self.hsv[2] * self.hsv[1]
+        X = C * ( 1 - abs( (self.hsv[0]*6)%2 - 1 ) )
+        m = self.hsv[2] - C
 
+        if self.hsv[0] < 1/6:
+            R_hat, G_hat, B_hat = C, X, 0
+        elif self.hsv[0] < 2/6:
+            R_hat, G_hat, B_hat = X, C, 0
+        elif self.hsv[0] < 3/6:
+            R_hat, G_hat, B_hat = 0, C, X
+        elif self.hsv[0] < 4/6:
+            R_hat, G_hat, B_hat = 0, X, C
+        elif self.hsv[0] < 5/6:
+            R_hat, G_hat, B_hat = X, 0, C
+        elif self.hsv[0] <= 6/6:
+            R_hat, G_hat, B_hat = C, 0, X
+
+        R, G, B = (R_hat+m), (G_hat+m), (B_hat+m)
+        
+        return R, G, B
+    
+    
     def forward(self, input):
         h, s, v = self.get_hsv(input)
 
