@@ -2,6 +2,9 @@
 A pytorch implementation that converts image RGB color space into HSV allowing differentiable back-propagate
 
 
+## Value range
+Each H,S,V are values in the range of [0, 1]
+
 
 ## How to use
 It comes within a Loss function
